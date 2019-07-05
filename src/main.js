@@ -1,12 +1,13 @@
-const DoctorList = require('./doctors.js');
+const DoctorPull = require('./doctorAPI');
+const DoctorList = require('./doctors');
 import './styles.css';
 import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-let generateDoctorCards = (docArray) => {
-  console.log(docArray);
-  docArray.forEach(function(doctor) {
+let displayDoctorCards = (docList) => {
+  console.log(docList);
+  docList.doctors.forEach(function(doctor) {
     let htmlForDoctor =
     `<div class='col-md-3'>
     <div class='card'>
@@ -22,47 +23,52 @@ let generateDoctorCards = (docArray) => {
     </div>`;
 
     $('#doctors').append(htmlForDoctor);
-  })
+  });
 };
 
-let checkEmpty = (docArray) => {
-  if (docArray.length <= 0) {
-    return new Error('Returned no doctors!')
+let checkEmpty = (docList) => {
+  if (docList.doctors.length <= 0) {
+    return new Error('Returned no doctors!');
   } else {
     return true;
   }
+};
+
+let grabNewDoctor = (docList, doctor) => {
+  const firstName = doctor.profile.first_name;
+  const lastName = doctor.profile.last_name;
+  const image = doctor.profile.image_url;
+  let address;
+  let acceptingNewPatience;
+  doctor.practices.forEach(function (practice) {
+    if (practice.within_search_area) {
+      acceptingNewPatience = practice.accepts_new_patients;
+      address = `${practice.visit_address.city} ${practice.visit_address.state}, ${practice.visit_address.zip}\n${practice.visit_address.street}`;
+    }
+  });
+  return [firstName, lastName, image, address, acceptingNewPatience];
 }
 
 $(document).ready(function () {
   $('#doctorForm').submit(function (event) {
-    let doctorArray = [];
     event.preventDefault();
+    let currentDoctorList = new DoctorList;
     $('#doctors').html('');
     const query = $('#medIssue').val();
-    let service = new DoctorList;
+    let service = new DoctorPull;
     let promise = service.getDoctor(query);
 
     promise.then(function (response) {
       let body = JSON.parse(response);
       body.data.forEach(function (doctor) {
 
-        const firstName = doctor.profile.first_name;
-        const lastName = doctor.profile.last_name;
-        const image = doctor.profile.image_url;
-        let address;
-        let acceptingNewPatience;
-        doctor.practices.forEach(function (practice) {
-          if (practice.within_search_area) {
-            acceptingNewPatience = practice.accepts_new_patients;
-            address = `${practice.visit_address.city} ${practice.visit_address.state}, ${practice.visit_address.zip}\n${practice.visit_address.street}`;
-          }
-        });
-        doctorArray.push([firstName, lastName, image, address, acceptingNewPatience]);
+        let currentDoc = grabNewDoctor(currentDoctorList, doctor);
+        currentDoctorList.pushDoctor(currentDoc);
 
       });
-      generateDoctorCards(doctorArray);
+      displayDoctorCards(currentDoctorList);
       try {
-        const isNotEmpty = checkEmpty(doctorArray);
+        const isNotEmpty = checkEmpty(currentDoctorList);
         if (isNotEmpty instanceof Error) {
           console.log(isNotEmpty.message);
           throw Error('Returned no doctors!');
@@ -76,8 +82,5 @@ $(document).ready(function () {
 
       $('.output').text('Error message');
     });
-
-
-
   });
 });
