@@ -6,9 +6,9 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-let displayDoctorCards = (docList) => {
+const displayDoctorCards = (docList) => {
   for (const doctor of docList.doctors) {
-    let htmlForDoctor =
+    const htmlForDoctor =
     `<div class='col-md-3'>
        <div class='card'>
          <img class='card-img-top' src='${doctor[2]}' alt='Card image cap'>
@@ -26,7 +26,7 @@ let displayDoctorCards = (docList) => {
   }
 };
 
-let checkEmpty = (docList) => {
+const checkEmpty = (docList) => {
   if (docList.doctors.length <= 0) {
     return new Error('Returned no doctors. Try to reword your search query.');
   } else {
@@ -34,7 +34,7 @@ let checkEmpty = (docList) => {
   }
 };
 
-let grabNewDoctor = (docList, doctor) => {
+const grabNewDoctor = (docList, doctor) => {
   const firstName = doctor.profile.first_name;
   const lastName = doctor.profile.last_name;
   const image = doctor.profile.image_url;
@@ -52,19 +52,19 @@ let grabNewDoctor = (docList, doctor) => {
 $(document).ready(function () {
   $('#doctorForm').submit(function (event) {
     event.preventDefault();
-    let currentDoctorList = new DoctorList;
+    const currentDoctorList = new DoctorList;
     $('#doctors').html('');
     $('#errorOutput').text('');
     const medicalInput = $('#medIssue').val();
     const nameInput = $('#docName').val();
-    let service = new DoctorPull;
-    let promise = service.getDoctor(nameInput, medicalInput);
+    const service = new DoctorPull;
+    const promise = service.getDoctor(nameInput, medicalInput);
 
     promise.then(function (response) {
-      let body = JSON.parse(response);
+      const body = JSON.parse(response);
       for(const doctor of body.data) {
 
-        let currentDoc = grabNewDoctor(currentDoctorList, doctor);
+        const currentDoc = grabNewDoctor(currentDoctorList, doctor);
         currentDoctorList.pushDoctor(currentDoc);
 
       }
@@ -82,7 +82,7 @@ $(document).ready(function () {
       }
     }, function (error) {
 
-      $('.output').text('Error message');
+      $('#errorOutput').text('Error!');
     });
   });
 });
