@@ -1,4 +1,4 @@
-import { DoctorList } from './doctors.js';
+const DoctorList = require('./doctors.js');
 import './styles.css';
 import $ from 'jquery';
 import 'bootstrap';
