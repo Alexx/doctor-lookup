@@ -8,12 +8,12 @@ $(document).ready(function () {
   $('#doctorForm').submit(function (event) {
     event.preventDefault();
 
-    let service = new DoctorList();
+    let service = new DoctorList;
     let promise = service.getDoctor();
 
     promise.then(function (response) {
       let body = JSON.parse(response);
-      $('.output').text(body);
+      console.log(body);
     }, function (error) {
 
       $('.output').text('Error message');
