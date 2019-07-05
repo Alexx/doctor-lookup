@@ -7,7 +7,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 let displayDoctorCards = (docList) => {
-  docList.doctors.forEach(function(doctor) {
+  for (const doctor of docList.doctors) {
     let htmlForDoctor =
     `<div class='col-md-3'>
        <div class='card'>
@@ -23,7 +23,7 @@ let displayDoctorCards = (docList) => {
      </div>`;
 
     $('#doctors').append(htmlForDoctor);
-  });
+  }
 };
 
 let checkEmpty = (docList) => {
@@ -40,12 +40,12 @@ let grabNewDoctor = (docList, doctor) => {
   const image = doctor.profile.image_url;
   let address;
   let acceptingNewPatience;
-  doctor.practices.forEach(function (practice) {
+  for(const practice of doctor.practices) {
     if (practice.within_search_area) {
       acceptingNewPatience = practice.accepts_new_patients;
       address = `${practice.visit_address.city} ${practice.visit_address.state}, ${practice.visit_address.zip}\n${practice.visit_address.street}`;
     }
-  });
+  }
   return [firstName, lastName, image, address, acceptingNewPatience];
 };
 
@@ -55,18 +55,19 @@ $(document).ready(function () {
     let currentDoctorList = new DoctorList;
     $('#doctors').html('');
     $('#errorOutput').text('');
-    const query = $('#medIssue').val();
+    const medicalInput = $('#medIssue').val();
+    const nameInput = $('#docName').val();
     let service = new DoctorPull;
-    let promise = service.getDoctor(query);
+    let promise = service.getDoctor(nameInput, medicalInput);
 
     promise.then(function (response) {
       let body = JSON.parse(response);
-      body.data.forEach(function (doctor) {
+      for(const doctor of body.data) {
 
         let currentDoc = grabNewDoctor(currentDoctorList, doctor);
         currentDoctorList.pushDoctor(currentDoc);
 
-      });
+      }
       displayDoctorCards(currentDoctorList);
       try {
         const isNotEmpty = checkEmpty(currentDoctorList);
