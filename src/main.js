@@ -16,6 +16,7 @@ const displayDoctorCards = (docList) => {
           <h5 class='card-title'>${doctor[0]} ${doctor[1]}</h5>
          </div>
          <ul class='list-group list-group-flush'>
+           <li class='list-group-item'>Phone: ${doctor[5]}</li>
            <li class='list-group-item'>Address: ${doctor[3]}</li>
            <li class='list-group-item'>Accepting new patients: ${doctor[4]}</ li>
          </ul>
@@ -40,13 +41,15 @@ const grabNewDoctor = (docList, doctor) => {
   const image = doctor.profile.image_url;
   let address;
   let acceptingNewPatience;
+  let phone;
   for(const practice of doctor.practices) {
     if (practice.within_search_area) {
-      acceptingNewPatience = practice.accepts_new_patients;
       address = `${practice.visit_address.city} ${practice.visit_address.state}, ${practice.visit_address.zip}\n${practice.visit_address.street}`;
+      acceptingNewPatience = practice.accepts_new_patients;
+      phone = practice.phones[0].number;
     }
   }
-  return [firstName, lastName, image, address, acceptingNewPatience];
+  return [firstName, lastName, image, address, acceptingNewPatience, phone];
 };
 
 $(document).ready(function () {
