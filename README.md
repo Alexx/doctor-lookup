@@ -12,7 +12,7 @@ _This is a web application that takes in a user's medical issue and returns a li
 
 | Behavior | Input | Output |
 | ------------- |:-------------:| -----:|
-| Enter medical issue | Sore throat | List of available doctors |
+| DoctorList initializes an empty doctors array | '' | 0 |
 
 ## Setup/Installation
 
