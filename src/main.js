@@ -85,7 +85,7 @@ $(document).ready(function () {
       }
     }, function (error) {
 
-      $('#errorOutput').text('Error!');
+      $('#errorOutput').text('Unexpected api error!');
     });
   });
 });
