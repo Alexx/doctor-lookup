@@ -1,3 +1,4 @@
+
 const DoctorPull = require('./doctorAPI');
 const DoctorList = require('./doctors');
 import './styles.css';
@@ -6,21 +7,20 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 let displayDoctorCards = (docList) => {
-  console.log(docList);
   docList.doctors.forEach(function(doctor) {
     let htmlForDoctor =
     `<div class='col-md-3'>
-    <div class='card'>
-    <img class='card-img-top' src='${doctor[2]}' alt='Card image cap'>
-    <div class='card-body'>
-    <h5 class='card-title'>${doctor[0]} ${doctor[1]}</h5>
-    </div>
-    <ul class='list-group list-group-flush'>
-    <li class='list-group-item'>Address: ${doctor[3]}</li>
-    <li class='list-group-item'>Accepting new patients: ${doctor[4]}</li>
-    </ul>
-    </div>
-    </div>`;
+       <div class='card'>
+         <img class='card-img-top' src='${doctor[2]}' alt='Card image cap'>
+         <div class='card-body'>
+          <h5 class='card-title'>${doctor[0]} ${doctor[1]}</h5>
+         </div>
+         <ul class='list-group list-group-flush'>
+           <li class='list-group-item'>Address: ${doctor[3]}</li>
+           <li class='list-group-item'>Accepting new patients: ${doctor[4]}</ li>
+         </ul>
+       </div>
+     </div>`;
 
     $('#doctors').append(htmlForDoctor);
   });
@@ -28,7 +28,7 @@ let displayDoctorCards = (docList) => {
 
 let checkEmpty = (docList) => {
   if (docList.doctors.length <= 0) {
-    return new Error('Returned no doctors!');
+    return new Error('Returned no doctors. Try to reword your search query.');
   } else {
     return true;
   }
@@ -47,13 +47,14 @@ let grabNewDoctor = (docList, doctor) => {
     }
   });
   return [firstName, lastName, image, address, acceptingNewPatience];
-}
+};
 
 $(document).ready(function () {
   $('#doctorForm').submit(function (event) {
     event.preventDefault();
     let currentDoctorList = new DoctorList;
     $('#doctors').html('');
+    $('#errorOutput').text('');
     const query = $('#medIssue').val();
     let service = new DoctorPull;
     let promise = service.getDoctor(query);
@@ -70,8 +71,8 @@ $(document).ready(function () {
       try {
         const isNotEmpty = checkEmpty(currentDoctorList);
         if (isNotEmpty instanceof Error) {
-          console.log(isNotEmpty.message);
-          throw Error('Returned no doctors!');
+          $('#errorOutput').text(isNotEmpty.message);
+          throw Error('Returned no doctors. Try to reword your search query.');
         } else {
           console.log('Try was successful, so no need to catch!');
         }

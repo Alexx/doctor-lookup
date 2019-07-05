@@ -9,3 +9,8 @@
 .card-img-top {
   height: 250px;
 }
+
+#errorOutput {
+  color: red;
+  font-weight: 700;
+}
