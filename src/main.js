@@ -26,7 +26,6 @@ let generateDoctorCards = (docArray) => {
 };
 
 let checkEmpty = (docArray) => {
-  debugger;
   if (docArray.length <= 0) {
     return new Error('Returned no doctors!')
   } else {
@@ -62,23 +61,23 @@ $(document).ready(function () {
 
       });
       generateDoctorCards(doctorArray);
+      try {
+        const isNotEmpty = checkEmpty(doctorArray);
+        if (isNotEmpty instanceof Error) {
+          console.log(isNotEmpty.message);
+          throw Error('Returned no doctors!');
+        } else {
+          console.log('Try was successful, so no need to catch!');
+        }
+      } catch(error) {
+        console.error(`Alert! We have an error: ${error.message}`);
+      }
     }, function (error) {
 
       $('.output').text('Error message');
     });
 
 
-    try {
-      const isNotEmpty = checkEmpty(doctorArray);
-      if (checkEmpty instanceof Error) {
-        console.log(isNotEmpty.message);
-        throw Error('Returned no doctors!');
-      } else {
-        console.log("Try was successful, so no need to catch!");
-      }
-    } catch(error) {
-      console.error(`Alert! We have an error: ${error.message}`);
-    }
 
   });
 });
