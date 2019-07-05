@@ -9,14 +9,14 @@ let generateDoctorCards = (docArray) => {
   docArray.forEach(function(doctor) {
     let htmlForDoctor =
     `<div class='col-md-3'>
-    <div class="card">
-    <img class="card-img-top" src="${doctor[2]}" alt="Card image cap">
-    <div class="card-body">
-    <h5 class="card-title">${doctor[0]} ${doctor[1]}</h5>
+    <div class='card'>
+    <img class='card-img-top' src='${doctor[2]}' alt='Card image cap'>
+    <div class='card-body'>
+    <h5 class='card-title'>${doctor[0]} ${doctor[1]}</h5>
     </div>
-    <ul class="list-group list-group-flush">
-    <li class="list-group-item">Address: ${doctor[3]}</li>
-    <li class="list-group-item">Accepting new patients: ${doctor[4]}</li>
+    <ul class='list-group list-group-flush'>
+    <li class='list-group-item'>Address: ${doctor[3]}</li>
+    <li class='list-group-item'>Accepting new patients: ${doctor[4]}</li>
     </ul>
     </div>
     </div>`;
@@ -24,6 +24,15 @@ let generateDoctorCards = (docArray) => {
     $('#doctors').append(htmlForDoctor);
   })
 };
+
+let checkEmpty = (docArray) => {
+  debugger;
+  if (docArray.length <= 0) {
+    return new Error('Returned no doctors!')
+  } else {
+    return true;
+  }
+}
 
 $(document).ready(function () {
   $('#doctorForm').submit(function (event) {
@@ -58,6 +67,18 @@ $(document).ready(function () {
       $('.output').text('Error message');
     });
 
+
+    try {
+      const isNotEmpty = checkEmpty(doctorArray);
+      if (checkEmpty instanceof Error) {
+        console.log(isNotEmpty.message);
+        throw Error('Returned no doctors!');
+      } else {
+        console.log("Try was successful, so no need to catch!");
+      }
+    } catch(error) {
+      console.error(`Alert! We have an error: ${error.message}`);
+    }
 
   });
 });
